@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  workspaces_ops_bot
+Globals:
+  Function:
+    Timeout: 30
+
+Parameters:
+  SlackSigningSecret:
+    Type: String
+  SlackBotToken:
+    Type: String
+ 
+Resources:
+  AddWorkSpaceLambda:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Role: arn:aws:iam::530182258888:role/lambda_kratos
+      CodeUri: add_workspace_lambda/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Events:
+        AddWorkSpaceUser:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /create_workspace
+            Method: post
+
+  SlackBoltBot:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Role: arn:aws:iam::530182258888:role/lambda_kratos
+      ImageConfig:
+        Command:
+            - app.lambda_handler
+      Environment:
+        Variables:
+
+          ADD_WORKSPACES_ENDPOINT: !Sub "https://{AddWorkSpaceLambda.arn}.execute-api.${AWS::Region}.amazonaws.com/add_user"          
+          SLACK_SIGNING_SECRET: !Ref SlackSigningSecret
+          SLACK_BOT_TOKEN: !Ref SlackBotToken
+      PackageType: Image
+      Events: 
+        AddWorkSpaceUser:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /create
+            Method: post
+    Metadata:
+      DockerTag: slackbotlambda
+      DockerContext: ./slackbot_lambda
+      Dockerfile: Dockerfile
+
+
+      
+      
+  
+
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html
+# https://github.com/aws/aws-sam-cli/issues/2253
+ 
+
+Outputs:
+  # ServerlessRestApi i-s an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  AddWorkSpaceLambdaOutPut:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/add_user"
+
+
+
+# https://aws.amazon.com/blogs/compute/using-container-image-support-for-aws-lambda-with-aws-sam/
