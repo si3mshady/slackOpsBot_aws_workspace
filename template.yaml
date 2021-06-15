@@ -15,7 +15,7 @@ Parameters:
 Resources:
   AddWorkSpaceLambda:
     Type: AWS::Serverless::Function 
-      Role: arn:aws:iam::530182258888:role/lambda_kratos
+      Role: "arn:aws:iam::530182258888:role/lambda_kratos"
       CodeUri: add_workspace_lambda/
       Handler: app.lambda_handler
       Runtime: python3.8
@@ -29,7 +29,7 @@ Resources:
   SlackBoltBot:
     Type: AWS::Serverless::Function 
     Properties:
-      Role: arn:aws:iam::530182258888:role/lambda_kratos
+      Role: "arn:aws:iam::530182258888:role/lambda_kratos"
       ImageConfig:
         Command:
             - app.lambda_handler
