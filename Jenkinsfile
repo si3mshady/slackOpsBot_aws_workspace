@@ -10,29 +10,28 @@ pipeline {
     }
     stage('Build') {
       steps {
-        // unstash 'venv'
-        sh 'source venv/bin/activate'
+        unstash 'venv'
         sh 'venv/bin/sam build'
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
     }
-    // stage('beta') {
-    //   environment {
-    //     STACK_NAME = 'deployed-with-jenkins'
-    //     S3_BUCKET = 'si3mshady-prime-devops-bucket'
-    //   }
-    //   steps {
-    //     withAWS(credentials: 'sam-jenkins-credentials', region: 'us-east-2') {
-    //     //   unstash 'venv'
-    //       sh 'source venv/bin/activate'
-    //       sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
-    //       dir ('hello-world') {
-    //         sh 'npm ci'
-    //         sh 'npm run integ-test'
-    //       }
-    //     }
-    //   }
-    // }
+    stage('beta') {
+      environment {
+        STACK_NAME = 'deployed-with-jenkins'
+        S3_BUCKET = 'si3mshady-prime-devops-bucket'
+      }
+      steps {
+        withAWS(credentials: 'sam-jenkins-credentials', region: 'us-east-2') {
+          unstash 'venv'
+          unstash 'aws-sam'
+          sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
+          dir ('hello-world') {
+            sh 'npm ci'
+            sh 'npm run integ-test'
+          }
+        }
+      }
+    }
     stage('prod') {
       environment {
         STACK_NAME = 'sam-app-prod-stage'
@@ -40,8 +39,8 @@ pipeline {
       }
       steps {
         withAWS(credentials: 'sam-jenkins-credentials', region: 'us-east-2') {
-            sh 'source venv/bin/activate'
-            sh 'venv/bin/sam build'
+          unstash 'venv'
+          unstash 'aws-sam'
           sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
         }
       }
