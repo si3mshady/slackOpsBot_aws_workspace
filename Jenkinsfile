@@ -5,6 +5,11 @@ pipeline {
     stage("build") {
       steps {
         echo 'building the application...'
+        echo 'Jenkins training with Nana'
+        
+        script {
+            def test = 2 + 2 > 100? 'Cool!': 'Not Cool'
+        }
       }
     }
 
