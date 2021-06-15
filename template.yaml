@@ -14,21 +14,20 @@ Parameters:
  
 Resources:
   AddWorkSpaceLambda:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
+    Type: AWS::Serverless::Function 
       Role: arn:aws:iam::530182258888:role/lambda_kratos
       CodeUri: add_workspace_lambda/
       Handler: app.lambda_handler
       Runtime: python3.8
       Events:
         AddWorkSpaceUser:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api 
           Properties:
             Path: /create_workspace
             Method: post
 
   SlackBoltBot:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function 
     Properties:
       Role: arn:aws:iam::530182258888:role/lambda_kratos
       ImageConfig:
@@ -43,7 +42,7 @@ Resources:
       PackageType: Image
       Events: 
         AddWorkSpaceUser:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api 
           Properties:
             Path: /create
             Method: post
@@ -59,16 +58,4 @@ Resources:
 
 # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html
 # https://github.com/aws/aws-sam-cli/issues/2253
- 
-
-Outputs:
-  # ServerlessRestApi i-s an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  AddWorkSpaceLambdaOutPut:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/add_user"
-
-
-
 # https://aws.amazon.com/blogs/compute/using-container-image-support-for-aws-lambda-with-aws-sam/
