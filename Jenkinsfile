@@ -23,14 +23,15 @@ pipeline {
       environment {
         STACK_NAME = 'sam-app-prod-stage'
         S3_BUCKET = 'another-devops-bucket'
+        IMAGE_REPO = '530182258888.dkr.ecr.us-east-2.amazonaws.com/si3mshady-projects'
       }
       steps {
         withAWS(credentials: 'sam-jenkins-credentials', region: 'us-east-2') {
           unstash 'venv'
           unstash 'aws-sam'
           sh 'venv/bin/sam build'
-          sh 'venv/bin/sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yaml --image-repository 530182258888.dkr.ecr.us-east-2.amazonaws.com/si3mshady-projects'
-          sh 'venv/bin/sam deploy --template-file packaged.yaml --stack-name $STACK_NAME --capabilities CAPABILITY_IAM'
+          sh 'venv/bin/sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yaml --image-repository $IMAGE_REPO'
+          sh 'venv/bin/sam deploy --template-file packaged.yaml --stack-name $STACK_NAME --capabilities CAPABILITY_IAM --image-repository $IMAGE_REPO'
         //   sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
         }
       }
