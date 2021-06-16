@@ -18,7 +18,8 @@ pipeline {
         unstash 'venv'
         // sh 'venv/bin/pip3 install aws-sam-cli'
         // sh 'venv/bin/ build'
-        sh '/usr/bin/docker run amazon/aws-sam-cli-build-image-python3.8 sam build'
+        sh 'echo $PWD'
+        sh 'docker run amazon/aws-sam-cli-build-image-python3.8 sam build'
 
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
