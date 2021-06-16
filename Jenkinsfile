@@ -9,11 +9,15 @@ pipeline {
       }
     }
     stage('Build') {
+    environment {
+        
+        IMAGE_REPO = '530182258888.dkr.ecr.us-east-2.amazonaws.com/si3mshady-projects'
+      }
       
       steps {
         unstash 'venv'
-        // sh 'venv/bin/pip3 install aws-sam-cli'
-        // sh 'venv/bin/sam build'
+         sh 'venv/bin/sam build'
+         sh 'venv/bin/sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yaml --image-repository $IMAGE_REPO'
 
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
@@ -28,11 +32,8 @@ pipeline {
       steps {
         withAWS(credentials: 'sam-jenkins-credentials', region: 'us-east-2') {
           unstash 'venv'
-          unstash 'aws-sam'
-          sh 'venv/bin/sam build'
-          sh 'venv/bin/sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yaml --image-repository $IMAGE_REPO'
+          unstash 'aws-sam'         
           sh 'venv/bin/sam deploy --template-file packaged.yaml --stack-name $STACK_NAME  --capabilities CAPABILITY_IAM --image-repository $IMAGE_REPO  --parameter-overrides SlackSigningSecret=toil  SlackBotToken=toil'
-        //   sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
         }
       }
     }
