@@ -10,8 +10,9 @@ pipeline {
     stage('Build') {
       steps {
         unstash 'venv'
+        sh 'sudo systemctl start docker'
         sh 'venv/bin/pip3 install aws-sam-cli'
-        sh 'venv/bin/sam build'
+        sh 'sudo venv/bin/sam build'
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
     }
