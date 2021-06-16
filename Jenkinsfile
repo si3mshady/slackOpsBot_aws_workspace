@@ -13,7 +13,7 @@ pipeline {
       steps {
         unstash 'venv'
         // sh 'venv/bin/pip3 install aws-sam-cli'
-        sh 'venv/bin/sam build'
+        // sh 'venv/bin/sam build'
 
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
@@ -28,6 +28,7 @@ pipeline {
         withAWS(credentials: 'sam-jenkins-credentials', region: 'us-east-2') {
           unstash 'venv'
           unstash 'aws-sam'
+          sh 'venv/bin/sam build'
           sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
         }
       }
