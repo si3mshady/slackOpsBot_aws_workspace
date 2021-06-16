@@ -3,11 +3,14 @@ pipeline {
  
   stages {
     stage('Install sam-cli') {
-      steps {        
+      steps {   
+        sh 'python3 -m venv dev'     
+        sh 'source dev/bin/activate'
         sh 'pip3 install aws-sam-cli'
-        // sh 'python3.8 -m venv venv && venv/bin/pip3 install aws-sam-cli'
-        // stash includes: '**/venv/**/*', name: 'venv'
         sh 'sam build'
+        // // sh 'python3.8 -m venv venv && venv/bin/pip3 install aws-sam-cli'
+        // // stash includes: '**/venv/**/*', name: 'venv'
+        // sh 'sam build'
       }
     }
     stage('Build') {
