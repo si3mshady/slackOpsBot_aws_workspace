@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Install sam-cli') {
       steps {        
-        sh 'python3.8 -m venv venv && apt install awscli'
+        sh 'python3.8 -m venv venv && sudo apt install awscli'
         stash includes: '**/venv/**/*', name: 'venv'
       }
     }
