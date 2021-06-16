@@ -17,7 +17,7 @@ pipeline {
       steps {
         unstash 'venv'
          sh 'venv/bin/sam build'
-         sh 'venv/bin/sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yaml --image-repository $IMAGE_REPO'
+         sh 'venv/bin/sam package --s3-bucket=$S3_BUCKET --output-template-file=packaged.yaml --image-repository=$IMAGE_REPO'
 
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
