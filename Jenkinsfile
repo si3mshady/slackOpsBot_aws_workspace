@@ -29,7 +29,7 @@ pipeline {
           unstash 'venv'
           unstash 'aws-sam'
           sh 'venv/bin/sam build'
-          sh 'venv/bin/sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yaml'
+          sh 'venv/bin/sam package --s3-bucket $S3_BUCKET --output-template-file packaged.yaml --image-repository si3mshady-projects'
           sh 'venv/bin/sam deploy --template-file packaged.yaml --stack-name $STACK_NAME --capabilities CAPABILITY_IAM'
         //   sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
         }
