@@ -3,29 +3,17 @@ pipeline {
  
   stages {
     stage('Install sam-cli') {
-      steps {   
-        sh 'python3 -m venv dev'     
-        sh 'source dev/bin/activate'
-        sh 'pip3 install aws-sam-cli'
-        sh 'sam build'
-        // // sh 'python3.8 -m venv venv && venv/bin/pip3 install aws-sam-cli'
-        // // stash includes: '**/venv/**/*', name: 'venv'
-        // sh 'sam build'
+      steps {        
+        sh 'python3.8 -m venv venv && venv/bin/pip3 install aws-sam-cli'
+        stash includes: '**/venv/**/*', name: 'venv'
       }
     }
     stage('Build') {
-
-        // agent {
-        //         docker { image 'amazon/aws-sam-cli-build-image-python3.8'}
-        //          args '-u root:root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
-        //     }
+      
       steps {
         unstash 'venv'
         // sh 'venv/bin/pip3 install aws-sam-cli'
-        // sh 'venv/bin/ build'
-        sh 'echo $PWD'
-        sh 'whoami'
-        sh 'sam build'
+        sh 'venv/bin/sam build'
 
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
