@@ -3,16 +3,16 @@ pipeline {
   stages {
     stage('Install sam-cli') {
       steps {        
-        sh 'python3.8 -m venv venv && venv/bin/pip3 install aws-sam-cli'
+        sh 'python3.8 -m venv venv && apt install awscli'
         stash includes: '**/venv/**/*', name: 'venv'
       }
     }
     stage('Build') {
       steps {
         unstash 'venv'
-        sh 'sudo systemctl start docker'
+        
         sh 'venv/bin/pip3 install aws-sam-cli'
-        sh 'sudo venv/bin/sam build'
+        sh 'aws venv/bin/sam build'
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
     }
