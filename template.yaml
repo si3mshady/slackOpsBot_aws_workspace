@@ -15,6 +15,7 @@ Parameters:
 Resources:
   AddWorkSpaceLambda:
     Type: AWS::Serverless::Function 
+    Properties:
       Role: "arn:aws:iam::530182258888:role/lambda_kratos"
       CodeUri: add_workspace_lambda/
       Handler: app.lambda_handler
