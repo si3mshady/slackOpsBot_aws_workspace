@@ -3,7 +3,8 @@ pipeline {
  
   stages {
     stage('Install sam-cli') {
-      steps {
+      steps {        
+        sh 'sudo apt-get install python3.8-venv'
         sh 'python3.8 -m venv venv && venv/bin/pip3 install aws-sam-cli'
         stash includes: '**/venv/**/*', name: 'venv'
       }
