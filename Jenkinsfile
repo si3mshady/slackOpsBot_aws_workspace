@@ -4,8 +4,9 @@ pipeline {
   stages {
     stage('Install sam-cli') {
       steps {        
-        sh 'python3.8 -m venv venv && venv/bin/pip3 install aws-sam-cli'
-        stash includes: '**/venv/**/*', name: 'venv'
+        // sh 'python3.8 -m venv venv && venv/bin/pip3 install aws-sam-cli'
+        // stash includes: '**/venv/**/*', name: 'venv'
+        sh 'sam build'
       }
     }
     stage('Build') {
@@ -20,7 +21,7 @@ pipeline {
         // sh 'venv/bin/ build'
         sh 'echo $PWD'
         sh 'whoami'
-        // sh 'docker run amazon/aws-sam-cli-build-image-python3.8 sam build /var/lib/jenkins/workspace/multi-branch-pipeline_main/template.yaml'
+        sh 'sam build'
 
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
