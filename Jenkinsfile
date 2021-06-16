@@ -10,10 +10,10 @@ pipeline {
     }
     stage('Build') {
 
-        agent {
-                docker { image 'amazon/aws-sam-cli-build-image-python3.8'}
-                 args '-u root:root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
-            }
+        // agent {
+        //         docker { image 'amazon/aws-sam-cli-build-image-python3.8'}
+        //          args '-u root:root --privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        //     }
       steps {
         // unstash 'venv'
         // sh 'venv/bin/pip3 install aws-sam-cli'
