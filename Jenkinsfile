@@ -9,10 +9,14 @@ pipeline {
       }
     }
     stage('Build') {
+
+        agent {
+                docker { image 'aws-sam-cli-build-image-python3.8:latest' }
+            }
       steps {
         unstash 'venv'
         // sh 'venv/bin/pip3 install aws-sam-cli'
-        sh 'venv/bin/sam build'
+        sh 'sam build'
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
     }
