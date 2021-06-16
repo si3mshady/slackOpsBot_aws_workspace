@@ -11,7 +11,7 @@ pipeline {
     stage('Build') {
 
         agent {
-                docker { image 'aws-sam-cli-build-image-python3.8:latest' }
+                docker { image 'amazon/aws-sam-cli-build-image-python3.8'}
             }
       steps {
         unstash 'venv'
