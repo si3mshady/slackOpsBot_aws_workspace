@@ -1,5 +1,6 @@
 pipeline {
-  agent any 
+  agent any
+ 
   stages {
     stage('Install sam-cli') {
       steps {        
@@ -8,11 +9,8 @@ pipeline {
       }
     }
     stage('Build') {
-
-        agent {
-       
       steps {
-        unstash 'venv'       
+        unstash 'venv'
         // sh 'venv/bin/pip3 install aws-sam-cli'
         sh 'venv/bin/sam build'
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
