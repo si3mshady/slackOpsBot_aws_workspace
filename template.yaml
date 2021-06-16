@@ -36,7 +36,6 @@ Resources:
             - app.lambda_handler
       Environment:
         Variables:
-
           ADD_WORKSPACES_ENDPOINT: !Sub "https://{AddWorkSpaceLambda.arn}.execute-api.${AWS::Region}.amazonaws.com/add_user"          
           SLACK_SIGNING_SECRET: !Ref SlackSigningSecret
           SLACK_BOT_TOKEN: !Ref SlackBotToken
@@ -48,7 +47,7 @@ Resources:
             Path: /create
             Method: post
     Metadata:
-      DockerTag: slackbotlambda
+      DockerTag: slackbot
       DockerContext: ./slackbot_lambda
       Dockerfile: Dockerfile
 
