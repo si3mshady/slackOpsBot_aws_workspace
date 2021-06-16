@@ -19,7 +19,7 @@ pipeline {
         // sh 'venv/bin/pip3 install aws-sam-cli'
         // sh 'venv/bin/ build'
         sh 'echo $PWD'
-        sh 'docker run amazon/aws-sam-cli-build-image-python3.8 sam build'
+        sh 'docker run amazon/aws-sam-cli-build-image-python3.8 sam build /var/lib/jenkins/workspace/multi-branch-pipeline_main/template.yaml'
 
         stash includes: '**/.aws-sam/**/*', name: 'aws-sam'
       }
